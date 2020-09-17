@@ -1,0 +1,13 @@
+.pkg-scrollbar{
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 1px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(144,147,153,.3);
+  }
+  &::-webkit-scrollbar-track{
+    background-color: rgba(0, 0, 0, 0);
+  }
+}

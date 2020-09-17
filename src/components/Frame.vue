@@ -53,7 +53,7 @@ export default class Frame extends Vue {
   -webkit-app-region: drag;
   display: flex;
   justify-content: space-between;
-  color: #34495e;
+  color: #5c5c5c;
   .left{
     height: 100%;
     display: flex;
@@ -91,6 +91,7 @@ export default class Frame extends Vue {
       }
     }
     .close{
+      color: #34495e;
       &:hover{
         background-color: #f70505;
         color: #fff;

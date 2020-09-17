@@ -22,6 +22,7 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
+@import './assets/scss/style.scss';
 html, body, #app{
   height: 100%;
   margin: 0;
