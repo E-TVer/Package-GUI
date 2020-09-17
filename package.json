@@ -13,6 +13,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@hscmap/vue-menu": "^2.10.0",
     "core-js": "^3.6.5",
     "css.gg": "^2.0.0",
     "element-ui": "^2.13.2",

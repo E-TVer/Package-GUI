@@ -3,6 +3,7 @@ import App from './App.vue'
 import store from './store'
 import './plugins/element/index'
 import './plugins/cssgg/index'
+import './plugins/contextmenu/index'
 
 Vue.config.productionTip = false
 

@@ -24,7 +24,7 @@ export default class Main extends Vue {
   .body{
     flex: 1;
     width: 100%;
-    background-color: #ddd;
+    background-color: #fff;
   }
 }
 </style>

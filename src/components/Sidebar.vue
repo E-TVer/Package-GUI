@@ -8,10 +8,24 @@
       </div>
       <div class="body pkg-scrollbar">
         <div class="global" v-show="activeName === 'global'">
-          <div class="item" v-for="i in 50" :key="i">全局依赖</div>
+          <hsc-menu-style-white>
+            <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i">
+              <div class="item">全局依赖</div>
+              <template slot="contextmenu">
+                <hsc-menu-item label="删除" @click="deleteItem(i + '')" :sync="true" />
+              </template>
+            </hsc-menu-context-menu>
+          </hsc-menu-style-white>
         </div>
         <div class="project" v-show="activeName === 'project'">
-          <div class="item" v-for="i in 50" :key="i">项目目录</div>
+          <hsc-menu-style-white>
+            <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i">
+              <div class="item">项目目录</div>
+              <template slot="contextmenu">
+                <hsc-menu-item label="删除" @click="deleteItem(i + '')" :sync="true" />
+              </template>
+            </hsc-menu-context-menu>
+          </hsc-menu-style-white>
         </div>
       </div>
     </div>
@@ -36,6 +50,10 @@ export default class Sidebar extends Vue {
 
   activeNameEvent (e: string) {
     this.activeName = e
+  }
+
+  deleteItem (e: string) {
+    console.log(e)
   }
 }
 </script>
@@ -75,7 +93,10 @@ export default class Sidebar extends Vue {
     .body{
       flex: 1;
       position: relative;
-      overflow-y: auto;
+      overflow: hidden;
+      &:hover{
+        overflow-y: auto;
+      }
       .global, .project{
         position: absolute;
         width: 100%;
@@ -88,6 +109,7 @@ export default class Sidebar extends Vue {
         white-space: nowrap;
         text-overflow: ellipsis;
         padding-left: 14px;
+        font-size: 14px;
         &:hover{
           background-color: #f0f0f0;
         }

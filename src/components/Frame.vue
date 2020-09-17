@@ -54,6 +54,7 @@ export default class Frame extends Vue {
   display: flex;
   justify-content: space-between;
   color: #5c5c5c;
+  background-color: #fff;
   .left{
     height: 100%;
     display: flex;
