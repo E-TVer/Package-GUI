@@ -65,6 +65,7 @@ export default class Sidebar extends Vue {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  user-select: none;
   border-right: 1px solid #ededed;
   .top{
     height: 30px;
