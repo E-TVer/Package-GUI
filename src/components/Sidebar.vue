@@ -29,6 +29,17 @@
         </div>
       </div>
     </div>
+    <div class="bottom" v-show="activeName === 'global'">
+      <div class="btn add">
+        <i class="gg-add"></i>
+        <span>添加全局依赖</span>
+      </div>
+      <div class="btn sort">
+        <i class="gg-sort-az"></i>
+        <!-- <i class="gg-sort-za"></i> -->
+        <span @click="test">排序</span>
+      </div>
+    </div>
     <div class="bottom" v-show="activeName === 'project'">
       <div class="btn add">
         <i class="gg-folder-add"></i>
@@ -37,7 +48,7 @@
       <div class="btn sort">
         <i class="gg-sort-az"></i>
         <!-- <i class="gg-sort-za"></i> -->
-        <span>排序</span>
+        <span @click="test">排序</span>
       </div>
     </div>
   </div>
@@ -55,11 +66,18 @@ export default class Sidebar extends Vue {
   deleteItem (e: string) {
     console.log(e)
   }
+
+  test () {
+    // const v = exec('npm --version')
+    // const v = which('git')
+    // const v = echo(process.cwd())
+    // console.log(v)
+  }
 }
 </script>
 <style lang="scss" scoped>
 .sidebar{
-  width: 220px;
+  width: 240px;
   height: 100%;
   background-color: #fff;
   display: flex;
