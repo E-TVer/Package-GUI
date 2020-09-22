@@ -8,13 +8,11 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Main from './components/Main.vue'
-// import Setting from './components/Setting.vue'
 import Sidebar from './components/Sidebar.vue'
 
 @Component({
   components: {
     Main,
-    // Setting,
     Sidebar
   }
 })

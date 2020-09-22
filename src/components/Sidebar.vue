@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar" v-loading="loading">
     <div class="top"></div>
     <div class="middle">
       <div class="header">
@@ -9,10 +9,10 @@
       <div class="body pkg-scrollbar">
         <div class="global" v-show="activeName === 'global'">
           <hsc-menu-style-white>
-            <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i">
-              <div class="item">全局依赖</div>
+            <hsc-menu-context-menu style="display: block;" v-for="(val, key) in globalDep" :key="key">
+              <div class="item">{{key}}</div>
               <template slot="contextmenu">
-                <hsc-menu-item label="删除" @click="deleteItem(i + '')" :sync="true" />
+                <hsc-menu-item label="删除" @click="deleteItem(i)" :sync="true" />
               </template>
             </hsc-menu-context-menu>
           </hsc-menu-style-white>
@@ -30,6 +30,10 @@
       </div>
     </div>
     <div class="bottom" v-show="activeName === 'global'">
+      <div class="btn refresh" @click="refreshBtnClick()">
+        <i class="gg-sync"></i>
+        <span>刷新</span>
+      </div>
       <div class="btn add">
         <i class="gg-add"></i>
         <span>添加全局依赖</span>
@@ -37,7 +41,7 @@
       <div class="btn sort">
         <i class="gg-sort-az"></i>
         <!-- <i class="gg-sort-za"></i> -->
-        <span @click="test">排序</span>
+        <span>排序</span>
       </div>
     </div>
     <div class="bottom" v-show="activeName === 'project'">
@@ -48,16 +52,19 @@
       <div class="btn sort">
         <i class="gg-sort-az"></i>
         <!-- <i class="gg-sort-za"></i> -->
-        <span @click="test">排序</span>
+        <span>排序</span>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import Spawn from '../plugins/spawn'
 @Component
 export default class Sidebar extends Vue {
+  loading = false
   activeName = 'global'
+  globalDep = []
 
   activeNameEvent (e: string) {
     this.activeName = e
@@ -67,11 +74,16 @@ export default class Sidebar extends Vue {
     console.log(e)
   }
 
-  test () {
-    // const v = exec('npm --version')
-    // const v = which('git')
-    // const v = echo(process.cwd())
-    // console.log(v)
+  refreshBtnClick () {
+    this.loading = true
+    Spawn.getGlobal().then(res => {
+      this.loading = false
+      const json = JSON.parse(res)
+      console.log(json, 'json')
+      if (json.dependencies) {
+        this.globalDep = json.dependencies
+      }
+    })
   }
 }
 </script>
@@ -79,7 +91,7 @@ export default class Sidebar extends Vue {
 .sidebar{
   width: 240px;
   height: 100%;
-  background-color: #fff;
+  background-color: #fafafa;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -139,7 +151,6 @@ export default class Sidebar extends Vue {
     height: 30px;
     display: flex;
     .btn{
-      width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
@@ -152,7 +163,17 @@ export default class Sidebar extends Vue {
         background-color: #f0f0f0;
       }
     }
+    .refresh{
+      width: 60px;
+      border-right: 1px solid #ededed;
+      i{
+        color: #5c5c5c;
+        transform: scale(0.6);
+        margin-right: 6px;
+      }
+    }
     .add{
+      flex: 1;
       i{
         color: #5c5c5c;
         transform: scale(0.6);
@@ -160,7 +181,7 @@ export default class Sidebar extends Vue {
       }
     }
     .sort{
-      width: 70px;
+      width: 60px;
       border-left: 1px solid #ededed;
       i{
         color: #5c5c5c;
