@@ -1,11 +1,18 @@
 <template>
-  <div class="setting">setting</div>
+  <div class="setting">
+    <el-button @click="getInfo()">get package info</el-button>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import pg from '../utils/package'
 @Component
 export default class Setting extends Vue {
-
+  getInfo () {
+    pg.search('vue').then(res => {
+      console.log(res)
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -21,10 +21,16 @@
         </el-table>
       </div>
       <div class="footer">
-        <div class="count">共有 {{dependencies.length}} 个依赖</div>
-        <div class="setting" @click="settingBtnClick()">
-          <i class="gg-options"></i>
-          <span>设置</span>
+        <div class="left">
+          <i class="el-icon-loading"></i>
+          <span>正在安装全局依赖: @vue/cli</span>
+        </div>
+        <div class="right">
+          <div class="count">共有 {{dependencies.length}} 个依赖</div>
+          <div class="setting" @click="settingBtnClick()">
+            <i class="gg-options"></i>
+            <span>设置</span>
+          </div>
         </div>
       </div>
     </div>
@@ -92,8 +98,23 @@ export default class Main extends Vue {
       border-top: 1px solid #ededed;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: space-between;
       font-size: 12px;
+      .left{
+        height: 100%;
+        flex: 1;
+        padding-left: 10px;
+        color: #888;
+        display: flex;
+        align-items: center;
+      }
+      .right{
+        height: 100%;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
       .count{
         height: 100%;
         padding: 0 10px;
