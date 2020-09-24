@@ -5,11 +5,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import pg from '../utils/package'
+import { searchPkg } from '../utils/package'
 @Component
 export default class Setting extends Vue {
   getInfo () {
-    pg.search('vue').then(res => {
+    searchPkg('vue').then(res => {
       console.log(res)
     })
   }

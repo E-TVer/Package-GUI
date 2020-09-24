@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint --fix",
     "electron:build": "vue-cli-service electron:build",
     "dev": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
@@ -14,7 +14,6 @@
   "main": "background.js",
   "dependencies": {
     "@hscmap/vue-menu": "^2.10.0",
-    "@malept/cross-spawn-promise": "^1.1.0",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "css.gg": "^2.0.0",

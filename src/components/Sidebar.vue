@@ -9,8 +9,8 @@
       <div class="body pkg-scrollbar">
         <div class="global" v-show="activeName === 'global'">
           <hsc-menu-style-white>
-            <hsc-menu-context-menu style="display: block;" v-for="(val, key) in globalDep" :key="key">
-              <div class="item">{{key}}</div>
+            <hsc-menu-context-menu style="display: block;" v-for="(val, index) in globalDep" :key="index">
+              <div class="item">{{val.name}}</div>
               <template slot="contextmenu">
                 <hsc-menu-item label="删除" @click="deleteItem(i)" :sync="true" />
               </template>
@@ -34,11 +34,11 @@
         <i class="gg-sync"></i>
         <span>刷新</span>
       </div>
-      <div class="btn add">
+      <div class="btn add" @click="removeBtnClick()">
         <i class="gg-add"></i>
         <span>添加全局依赖</span>
       </div>
-      <div class="btn sort">
+      <div class="btn sort" @click="sortBtnClick()">
         <i class="gg-sort-az"></i>
         <!-- <i class="gg-sort-za"></i> -->
         <span>排序</span>
@@ -59,12 +59,12 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import Spawn from '../plugins/spawn'
+import { getGlobalDepSimple, addGlobalDep, removeGlobalDep } from '../plugins/spawn/global/globalDep'
 @Component
 export default class Sidebar extends Vue {
   loading = false
   activeName = 'global'
-  globalDep = []
+  globalDep: Array<object> = []
 
   activeNameEvent (e: string) {
     this.activeName = e
@@ -74,16 +74,20 @@ export default class Sidebar extends Vue {
     console.log(e)
   }
 
-  refreshBtnClick () {
+  async refreshBtnClick () {
     this.loading = true
-    Spawn.getGlobal().then(res => {
-      this.loading = false
-      const json = JSON.parse(res)
-      console.log(json, 'json')
-      if (json.dependencies) {
-        this.globalDep = json.dependencies
-      }
-    })
+    this.globalDep = await getGlobalDepSimple()
+    this.loading = false
+  }
+
+  async removeBtnClick () {
+    const r = await removeGlobalDep('nrm')
+    console.log(r)
+  }
+
+  async sortBtnClick () {
+    const r = await addGlobalDep('nrm')
+    console.log(r)
   }
 }
 </script>
