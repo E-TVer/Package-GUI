@@ -12,7 +12,9 @@ export async function getGlobalDepSimple (log = true) {
       name: i,
       version: dependencies[i].version
     }
-    arr.push(dep)
+    if (dep.version) {
+      arr.push(dep)
+    }
   }
   return arr
 }
@@ -30,7 +32,9 @@ export async function getGlobalDep (log = true) {
       name: i,
       version: versions[i] || dependencies[i].version
     }
-    arr.push(dep)
+    if (dep.version) {
+      arr.push(dep)
+    }
   }
   return arr
 }
@@ -42,10 +46,18 @@ export async function addGlobalDep (name: string, version?: string, log = true) 
   } else {
     result = await shell(npm, `install ${name}@${version || ''} -g`, '', log)
   }
-  return result
+  if (result.stdout.indexOf('added') >= 0) {
+    return { name, added: true, msg: result.stderr }
+  } else {
+    return { name, added: false, msg: result.stdout }
+  }
 }
 
 export async function removeGlobalDep (name: string, log = true) {
-  const result = await shell(npm, `uninstall ${name} -g`, '', log)
-  console.log('result: ', result)
+  const { stdout, stderr } = await shell(npm, `uninstall ${name} -g`, '', log)
+  if (stdout.indexOf('removed') >= 0) {
+    return { name: name, removed: true, msg: stdout }
+  } else {
+    return { name: name, removed: false, msg: stderr }
+  }
 }

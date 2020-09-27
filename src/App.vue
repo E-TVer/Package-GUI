@@ -2,6 +2,7 @@
   <div id="app">
     <Sidebar />
     <Main />
+    <AddDep :depType="'project'" v-if="dep.event === 'add'" />
   </div>
 </template>
 
@@ -9,14 +10,22 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Main from './components/Main.vue'
 import Sidebar from './components/Sidebar.vue'
+import AddDep from './components/dependencies/AddDep.vue'
 
 @Component({
   components: {
     Main,
-    Sidebar
+    Sidebar,
+    AddDep
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  addShow = false
+
+  get dep () {
+    return this.$store.getters.getDep
+  }
+}
 </script>
 
 <style lang="scss">

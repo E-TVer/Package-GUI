@@ -3,21 +3,21 @@
     <div class="top"></div>
     <div class="middle">
       <div class="header">
-        <div :class="[activeName === 'global' ? 'active ' : ''] + 'global'" @click="activeNameEvent('global')">全局</div>
-        <div :class="[activeName === 'project' ? 'active ' : ''] + 'project'" @click="activeNameEvent('project')">项目</div>
+        <div :class="[sidebar.type === 'global' ? 'active ' : ''] + 'global'" @click="activeNameEvent('global')">全局</div>
+        <div :class="[sidebar.type === 'project' ? 'active ' : ''] + 'project'" @click="activeNameEvent('project')">项目</div>
       </div>
       <div class="body pkg-scrollbar">
-        <div class="global" v-show="activeName === 'global'">
+        <div class="global" v-show="sidebar.type === 'global'">
           <hsc-menu-style-white>
             <hsc-menu-context-menu style="display: block;" v-for="(val, index) in globalDep" :key="index">
-              <div class="item">{{val.name}}</div>
+              <div class="item" @click="itemClick(val.name, val.version, 'global')">{{val.name}}</div>
               <template slot="contextmenu">
                 <hsc-menu-item label="删除" @click="deleteItem(i)" :sync="true" />
               </template>
             </hsc-menu-context-menu>
           </hsc-menu-style-white>
         </div>
-        <div class="project" v-show="activeName === 'project'">
+        <div class="project" v-show="sidebar.type === 'project'">
           <hsc-menu-style-white>
             <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i">
               <div class="item">项目目录</div>
@@ -29,22 +29,23 @@
         </div>
       </div>
     </div>
-    <div class="bottom" v-show="activeName === 'global'">
+    <div class="bottom" v-show="sidebar.type === 'global'">
       <div class="btn refresh" @click="refreshBtnClick()">
         <i class="gg-sync"></i>
         <span>刷新</span>
       </div>
-      <div class="btn add" @click="removeBtnClick()">
+      <!-- <div class="btn add" @click="sortBtnClick()"> -->
+      <div class="btn add" @click="addDepEvent('global')">
         <i class="gg-add"></i>
         <span>添加全局依赖</span>
       </div>
-      <div class="btn sort" @click="sortBtnClick()">
+      <div class="btn sort" @click="removeBtnClick()">
         <i class="gg-sort-az"></i>
         <!-- <i class="gg-sort-za"></i> -->
         <span>排序</span>
       </div>
     </div>
-    <div class="bottom" v-show="activeName === 'project'">
+    <div class="bottom" v-show="sidebar.type === 'project'">
       <div class="btn add">
         <i class="gg-folder-add"></i>
         <span>添加项目目录</span>
@@ -66,8 +67,36 @@ export default class Sidebar extends Vue {
   activeName = 'global'
   globalDep: Array<object> = []
 
+  get sidebar () {
+    return this.$store.getters.getSidebar
+  }
+
+  set sidebar (value) {
+    this.$store.commit('setSidebar', value)
+  }
+
+  get dep () {
+    return this.$store.getters.getDep
+  }
+
+  set dep (value) {
+    this.$store.commit('setDep', value)
+  }
+
+  addDepEvent (e: string) {
+    this.dep.event = 'add'
+    this.dep.type = e
+  }
+
   activeNameEvent (e: string) {
-    this.activeName = e
+    this.sidebar.type = e
+  }
+
+  itemClick (name: string, version: string, type: string) {
+    this.dep.event = 'view'
+    this.dep.name = name
+    this.dep.version = version
+    this.dep.type = type
   }
 
   deleteItem (e: string) {
@@ -77,6 +106,7 @@ export default class Sidebar extends Vue {
   async refreshBtnClick () {
     this.loading = true
     this.globalDep = await getGlobalDepSimple()
+    console.log(this.globalDep)
     this.loading = false
   }
 
@@ -147,6 +177,12 @@ export default class Sidebar extends Vue {
         font-size: 14px;
         &:hover{
           background-color: #f0f0f0;
+        }
+        &.hasUpdate{
+          &::after{
+            content: '*';
+            color: red;
+          }
         }
       }
     }

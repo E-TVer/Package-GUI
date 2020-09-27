@@ -35,7 +35,8 @@
       </div>
     </div>
     <transition name="fade">
-      <Setting v-if="setting" />
+      <Setting v-if="setting.show" />
+      <Global-Dep v-if="dep.event === 'view'" />
     </transition>
   </div>
 </template>
@@ -43,11 +44,13 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Frame from './Frame.vue'
 import Setting from './Setting.vue'
+import GlobalDep from './dependencies/GlobalDep.vue'
 
 @Component({
   components: {
     Frame,
-    Setting
+    Setting,
+    GlobalDep
   }
 })
 export default class Main extends Vue {
@@ -56,7 +59,21 @@ export default class Main extends Vue {
     { name: 'vue', localVersion: '2.8.11', onlineVersion: '2.9.1' }
   ]
 
-  setting = false
+  get setting () {
+    return this.$store.getters.getSetting
+  }
+
+  set setting (value) {
+    this.$store.commit('setSetting', value)
+  }
+
+  get dep () {
+    return this.$store.getters.getDep
+  }
+
+  set dep (value) {
+    this.$store.commit('setDep', value)
+  }
 
   settingBtnClick () {
     this.setting = true
