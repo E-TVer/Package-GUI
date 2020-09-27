@@ -1,16 +1,18 @@
 <template>
   <div class="globalDep">
     <div class="header">
-      <div class="item">
-        <div class="name">名称: {{info.package.name || ''}}</div>
-        <div class="version">版本: {{info.package.version || ''}}</div>
-        <div class="date">日期: {{info.package.date || ''}}</div>
+      <div class="item" v-if="info">
+        <div class="name">名称: {{info.package.name}}</div>
+        <div class="version">版本: {{info.package.version}}</div>
+        <div class="date">日期: {{info.package.date}}</div>
       </div>
-      <div class="item">
+      <div class="item" v-if="info">
         <div class="description">描述: {{info.package.description}}</div>
       </div>
     </div>
-    <div class="body">{{info}}</div>
+    <div class="body markdown-body pkg-scrollbar">
+      <div class="readme link-none" v-html="readme"></div>
+    </div>
     <div class="footer">
       <div class="log">
         log
@@ -23,10 +25,15 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { searchPkg } from '../../utils/package'
-@Component
+import { searchPkg, getRepository, getMarkdown } from '../../utils/package'
+import marked from 'marked'
+import hljs from 'highlight.js'
+@Component({
+  components: {}
+})
 export default class Setting extends Vue {
-  info = ''
+  info = null
+  readme = ''
   get dep () {
     return this.$store.getters.getDep
   }
@@ -41,10 +48,29 @@ export default class Setting extends Vue {
   }
 
   async getDepInfo () {
+    this.readme = ''
+    this.dep.name = 'css'
     const result = await searchPkg(this.dep.name)
-    console.log(result, 'result')
+
     if (result) {
       this.info = result.data.results[0]
+    }
+    const repo = await getRepository(this.dep.name)
+
+    if (repo) {
+      // const fullname = repo.data.items[0].full_name
+      // const branch = repo.data.items[0].default_branch
+      const fullname = 'markedjs/marked'
+      const branch = 'master'
+      const md = await getMarkdown(fullname, branch, 'README.md')
+      console.log(md)
+      this.readme = marked(md.data, {
+        mangle: false,
+        highlight: (code, language) => {
+          const lan = hljs.getLanguage(language) ? language : 'plaintext'
+          return hljs.highlight(lan, code).value
+        }
+      })
     }
   }
 
@@ -65,10 +91,9 @@ export default class Setting extends Vue {
   display: flex;
   flex-direction: column;
   .header{
-    padding: 20px;
+    padding: 20px 20px 0;
     color: #363636;
     font-size: 14px;
-    height: auto;
     .item{
       display: flex;
       justify-content: space-between;
@@ -77,7 +102,19 @@ export default class Setting extends Vue {
   }
   .body{
     flex: 1;
+    padding-right: 10px;
     padding: 0 20px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #00000000;
+    &:hover{
+      overflow-y: auto;
+      padding: 0 14px 0 20px;
+    }
+    .readme{
+      padding: 10px 0;
+      word-wrap:break-word;
+    }
   }
   .footer{
     height: 30px;

@@ -93,10 +93,10 @@ export default class Sidebar extends Vue {
   }
 
   itemClick (name: string, version: string, type: string) {
-    this.dep.event = 'view'
     this.dep.name = name
     this.dep.version = version
     this.dep.type = type
+    this.dep.event = 'view'
   }
 
   deleteItem (e: string) {
