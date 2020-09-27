@@ -5,7 +5,8 @@ import './plugins/element/index'
 import './plugins/cssgg/index'
 import './plugins/contextmenu/index'
 import '@primer/css/markdown/index.scss'
-import 'highlight.js/styles/github-gist.css'
+// import 'highlight.js/styles/github-gist.css'
+import './assets/scss/hljs-github.css'
 
 Vue.config.productionTip = false
 
