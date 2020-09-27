@@ -1,17 +1,17 @@
 <template>
-  <div class="globalDep">
-    <div class="header">
-      <div class="item" v-if="info">
-        <div class="name">名称: {{info.package.name}}</div>
-        <div class="version">版本: {{info.package.version}}</div>
-        <div class="date">日期: {{info.package.date}}</div>
-      </div>
-      <div class="item" v-if="info">
-        <div class="description">描述: {{info.package.description}}</div>
-      </div>
-    </div>
-    <div class="body markdown-body pkg-scrollbar" v-loading="loading">
-      <div class="readme link-none" v-html="readme"></div>
+  <div class="projectDep">
+    <div class="body pkg-scrollbar">
+      <el-table class="table" :data="dependencies">
+        <el-table-column label="名称" prop="name"></el-table-column>
+        <el-table-column label="本地版本" prop="localVersion"></el-table-column>
+        <el-table-column label="线上版本" prop="onlineVersion"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" @click="btnClickEvent(scope.row)">更新</el-button>
+            <el-button size="mini" type="danger" @click="btnClickEvent(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <div class="footer">
       <div class="log">
@@ -38,6 +38,8 @@ export default class Setting extends Vue {
 
   homepage = ''
   htmlUrl = ''
+
+  dependencies = []
 
   get dep () {
     return this.$store.getters.getDep
@@ -104,43 +106,28 @@ export default class Setting extends Vue {
   }
 
   mounted () {
-    this.getDepInfo()
+    // this.getDepInfo()
   }
 }
 </script>
 <style lang="scss" scoped>
-.globalDep{
-  position: absolute;
-  top: 30px;
-  right: 0;
-  z-index: 5;
+.projectDep{
+  width: 100%;
+  height: 100%;
   background-color: #fff;
-  width: calc(100% - 240px);
-  height: calc(100% - 30px);
   display: flex;
   flex-direction: column;
-  .header{
-    padding: 20px 20px 0;
-    color: #363636;
-    font-size: 14px;
-    border-bottom: 1px solid #ededed;
-    .item{
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-  }
   .body{
     flex: 1;
-    padding-right: 10px;
-    padding: 0 20px;
+    // padding-right: 10px;
+    // padding: 0 20px;
     position: relative;
     overflow: hidden;
     border: 1px solid #00000000;
-    &:hover{
-      overflow-y: auto;
-      padding: 0 14px 0 20px;
-    }
+    // &:hover{
+    //   overflow-y: auto;
+    //   padding: 0 14px 0 20px;
+    // }
     .readme{
       padding: 10px 0;
       word-wrap:break-word;

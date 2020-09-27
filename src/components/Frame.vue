@@ -28,6 +28,14 @@ import { remote } from 'electron'
 export default class Frame extends Vue {
   sidebar = false
 
+  get setting () {
+    return this.$store.getters.getSetting
+  }
+
+  set setting (value) {
+    this.$store.commit('setSetting', value)
+  }
+
   sideClickEvent () {
     this.sidebar = !this.sidebar
   }

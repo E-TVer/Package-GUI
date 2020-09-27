@@ -34,14 +34,13 @@
         <i class="gg-sync"></i>
         <span>刷新</span>
       </div>
-      <!-- <div class="btn add" @click="sortBtnClick()"> -->
       <div class="btn add" @click="addDepEvent('global')">
         <i class="gg-add"></i>
         <span>添加全局依赖</span>
       </div>
-      <div class="btn sort" @click="removeBtnClick()">
-        <i class="gg-sort-az"></i>
-        <!-- <i class="gg-sort-za"></i> -->
+      <div class="btn sort" @click="sortBtnClick('global')">
+        <i class="gg-sort-az" v-show="globalSort"></i>
+        <i class="gg-sort-za" v-show="!globalSort"></i>
         <span>排序</span>
       </div>
     </div>
@@ -60,12 +59,14 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getGlobalDepSimple, addGlobalDep, removeGlobalDep } from '../plugins/spawn/global/globalDep'
+import { getGlobalDepSimple } from '../plugins/spawn/global/globalDep'
 @Component
 export default class Sidebar extends Vue {
   loading = false
   activeName = 'global'
+  globalSort = true
   globalDep: Array<object> = []
+  projectDep: Array<object> = []
 
   get sidebar () {
     return this.$store.getters.getSidebar
@@ -110,14 +111,20 @@ export default class Sidebar extends Vue {
     this.loading = false
   }
 
-  async removeBtnClick () {
-    const r = await removeGlobalDep('nrm')
-    console.log(r)
+  async sortBtnClick (type: string) {
+    this.globalSort = !this.globalSort
+    if (type === 'global') {
+      this.globalDep.reverse()
+      return false
+    }
+    if (type === 'project') {
+      this.projectDep.reverse()
+      return false
+    }
   }
 
-  async sortBtnClick () {
-    const r = await addGlobalDep('nrm')
-    console.log(r)
+  mounted () {
+    this.refreshBtnClick()
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="add" @click="closeAddDep()">
+  <div class="add">
     <div class="box">
       <div class="title">安装{{ dep.type === 'global' ? '全局' : '项目' }}依赖</div>
       <div class="content">
@@ -61,7 +61,7 @@ export default class Add extends Vue {
   background-color: rgba(7, 17, 27, 0.7);
   z-index: 5;
   .box{
-    width: 480px;
+    width: 620px;
     height: auto;
     background-color: #fff;
     padding: 10px;
@@ -72,7 +72,7 @@ export default class Add extends Vue {
     .detail{
       margin: 15px 0;
       border: 1px solid #dedede;
-      height: 150px;
+      height: 200px;
       width: 100%;
       border-radius: 2px;
     }
