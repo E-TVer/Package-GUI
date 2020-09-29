@@ -1,12 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import axios, { AxiosResponse } from 'axios'
+const { dialog } = require('electron').remote
 
 export function hasYarn (projectPath: string): boolean {
   return fs.existsSync(path.join(projectPath, 'yarn.lock'))
 }
 
-export function hasNpm (projectPath: string): boolean {
+export function hasPkg (projectPath: string): boolean {
   return fs.existsSync(path.join(projectPath, 'package.json'))
 }
 
@@ -26,4 +27,21 @@ export async function getRepository (keyword: string): Promise<AxiosResponse> {
 export async function getMarkdown (fullname: string, branch: string, markdown: string): Promise<AxiosResponse> {
   const url = `https://raw.githubusercontent.com/${fullname}/${branch}/${markdown}`
   return axios.get(url, { headers: { accept: 'application/vnd.github.v3+json' } })
+}
+
+export async function getProject () {
+  return new Promise((resolve) => {
+    const result = dialog.showOpenDialogSync({
+      properties: ['openDirectory']
+    })
+    if (result) {
+      const path = result[0]
+      const flag = hasPkg(path)
+      if (flag) {
+        const arr = path.split('\\')
+        const name = arr[arr.length - 1]
+        resolve({ name: name, path: path })
+      }
+    }
+  })
 }

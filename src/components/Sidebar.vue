@@ -20,9 +20,13 @@
         <div class="project" v-show="sidebar.type === 'project'">
           <hsc-menu-style-white>
             <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i">
-              <div class="item">项目目录</div>
+              <div class="item">
+                <i class="el-icon-folder"></i>
+                <span>项目目录</span>
+              </div>
               <template slot="contextmenu">
                 <hsc-menu-item label="删除" @click="deleteItem(i + '')" :sync="true" />
+                <hsc-menu-item label="打开项目目录" @click="showInFolder(i.path)" :sync="true" />
               </template>
             </hsc-menu-context-menu>
           </hsc-menu-style-white>
@@ -45,7 +49,7 @@
       </div>
     </div>
     <div class="bottom" v-show="sidebar.type === 'project'">
-      <div class="btn add">
+      <div class="btn add" @click="addProject()">
         <i class="gg-folder-add"></i>
         <span>添加项目目录</span>
       </div>
@@ -59,14 +63,16 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { shell } from 'electron'
 import { getGlobalDepSimple } from '../plugins/spawn/global/globalDep'
+import { getProject } from '../utils/package'
 @Component
 export default class Sidebar extends Vue {
   loading = false
   activeName = 'global'
   globalSort = true
   globalDep: Array<object> = []
-  projectDep: Array<object> = []
+  projects: Array<object> = []
 
   get sidebar () {
     return this.$store.getters.getSidebar
@@ -107,7 +113,6 @@ export default class Sidebar extends Vue {
   async refreshBtnClick () {
     this.loading = true
     this.globalDep = await getGlobalDepSimple()
-    console.log(this.globalDep)
     this.loading = false
   }
 
@@ -118,13 +123,22 @@ export default class Sidebar extends Vue {
       return false
     }
     if (type === 'project') {
-      this.projectDep.reverse()
+      this.projects.reverse()
       return false
     }
   }
 
+  showInFolder (path: string) {
+    shell.showItemInFolder(path)
+  }
+
+  async addProject () {
+    const project = await getProject()
+    console.log(project, 'project')
+  }
+
   mounted () {
-    this.refreshBtnClick()
+    // this.refreshBtnClick()
   }
 }
 </script>
@@ -182,6 +196,9 @@ export default class Sidebar extends Vue {
         text-overflow: ellipsis;
         padding-left: 14px;
         font-size: 14px;
+        i{
+          margin-right: 4px;
+        }
         &:hover{
           background-color: #f0f0f0;
         }
@@ -221,10 +238,18 @@ export default class Sidebar extends Vue {
     }
     .add{
       flex: 1;
+      position: relative;
       i{
         color: #5c5c5c;
         transform: scale(0.6);
         margin-right: 6px;
+      }
+      .directory{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
     .sort{
