@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import axios, { AxiosResponse } from 'axios'
+import parseJSON from './parseJSON'
 const { dialog } = require('electron').remote
 
 export function hasYarn (projectPath: string): boolean {
@@ -29,7 +30,11 @@ export async function getMarkdown (fullname: string, branch: string, markdown: s
   return axios.get(url, { headers: { accept: 'application/vnd.github.v3+json' } })
 }
 
-export async function getProject () {
+interface ProjectValue {
+  name: string;
+  path: string;
+}
+export async function getProject (): Promise<ProjectValue> {
   return new Promise((resolve) => {
     const result = dialog.showOpenDialogSync({
       properties: ['openDirectory']
@@ -41,7 +46,15 @@ export async function getProject () {
         const arr = path.split('\\')
         const name = arr[arr.length - 1]
         resolve({ name: name, path: path })
+      } else {
+        resolve()
       }
     }
   })
+}
+
+export async function getProjectPkgJson (projectPath: string) {
+  const file = path.join(projectPath, 'package.json')
+  const json = parseJSON(fs.readFileSync(file, { encoding: 'utf8' }))
+  console.log(json)
 }

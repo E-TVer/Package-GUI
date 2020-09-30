@@ -8,7 +8,6 @@ export interface InSidebar {
   type: string;
 }
 export interface InProject {
-  show: boolean;
   name?: string;
   path?: string;
 }
@@ -34,10 +33,9 @@ export interface VuexState {
 const initState: VuexState = {
   sidebar: {
     show: true,
-    type: 'global'
+    type: 'project'
   },
   project: {
-    show: true,
     name: '',
     path: ''
   },
@@ -61,6 +59,9 @@ export default new Vuex.Store({
     getSidebar: state => {
       return state.sidebar
     },
+    getProject: state => {
+      return state.project
+    },
     getDep: state => {
       return state.dep
     },
@@ -71,6 +72,9 @@ export default new Vuex.Store({
   mutations: {
     setSidebar: (state, payload) => {
       state.sidebar = payload
+    },
+    setProject: (state, payload) => {
+      state.project = payload
     },
     setDep: (state, payload) => {
       state.dep = payload

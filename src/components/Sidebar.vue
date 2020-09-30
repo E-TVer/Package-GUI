@@ -9,8 +9,8 @@
       <div class="body pkg-scrollbar">
         <div class="global" v-show="sidebar.type === 'global'">
           <hsc-menu-style-white>
-            <hsc-menu-context-menu style="display: block;" v-for="(val, index) in globalDep" :key="index">
-              <div class="item" @click="itemClick(val.name, val.version, 'global')">{{val.name}}</div>
+            <hsc-menu-context-menu style="display: block;" v-for="(i, index) in globalDep" :key="index">
+              <div class="item" @click="globalitemClick(i.name, i.version, 'global')">{{i.name}}</div>
               <template slot="contextmenu">
                 <hsc-menu-item label="删除" @click="deleteItem(i)" :sync="true" />
               </template>
@@ -19,10 +19,10 @@
         </div>
         <div class="project" v-show="sidebar.type === 'project'">
           <hsc-menu-style-white>
-            <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i">
-              <div class="item">
+            <hsc-menu-context-menu style="display: block;" v-for="i in projects" :key="i.name">
+              <div class="item" @click="projectItemClick(i.name, i.path)">
                 <i class="el-icon-folder"></i>
-                <span>项目目录</span>
+                <span>{{i.name}}</span>
               </div>
               <template slot="contextmenu">
                 <hsc-menu-item label="删除" @click="deleteItem(i + '')" :sync="true" />
@@ -66,13 +66,16 @@ import { Component, Vue } from 'vue-property-decorator'
 import { shell } from 'electron'
 import { getGlobalDepSimple } from '../plugins/spawn/global/globalDep'
 import { getProject } from '../utils/package'
+interface ProjectValue {
+  name: string;
+  path: string;
+}
 @Component
 export default class Sidebar extends Vue {
   loading = false
-  activeName = 'global'
   globalSort = true
   globalDep: Array<object> = []
-  projects: Array<object> = []
+  projects: Array<ProjectValue> = []
 
   get sidebar () {
     return this.$store.getters.getSidebar
@@ -90,6 +93,14 @@ export default class Sidebar extends Vue {
     this.$store.commit('setDep', value)
   }
 
+  get project () {
+    return this.$store.getters.getProject
+  }
+
+  set project (value) {
+    this.$store.commit('setProject', value)
+  }
+
   addDepEvent (e: string) {
     this.dep.event = 'add'
     this.dep.type = e
@@ -99,11 +110,16 @@ export default class Sidebar extends Vue {
     this.sidebar.type = e
   }
 
-  itemClick (name: string, version: string, type: string) {
+  globalitemClick (name: string, version: string, type: string) {
     this.dep.name = name
     this.dep.version = version
     this.dep.type = type
     this.dep.event = 'view'
+  }
+
+  projectItemClick (name: string, path: string) {
+    this.project.name = name
+    this.project.path = path
   }
 
   deleteItem (e: string) {
@@ -134,7 +150,17 @@ export default class Sidebar extends Vue {
 
   async addProject () {
     const project = await getProject()
-    console.log(project, 'project')
+    if (project) {
+      for (const i of this.projects) {
+        if (i.name === project.name) {
+          this.$message.warning('项目已存在, 请勿重复添加')
+          return false
+        }
+      }
+      this.projects.push(project)
+    } else {
+      this.$message.warning('不是项目目录, 无法添加')
+    }
   }
 
   mounted () {

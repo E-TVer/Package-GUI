@@ -17,8 +17,6 @@
       <div class="log">
         log
       </div>
-      <div class="website btn" @click="openUrl(homepage)" v-if="homepage !== ''">官网</div>
-      <div class="website btn" @click="openUrl(htmlUrl)" v-if="htmlUrl !== ''">Github</div>
       <div class="delete btn">删除</div>
       <div class="update btn">更新</div>
     </div>
@@ -26,79 +24,35 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { searchPkg, getRepository, getMarkdown } from '../../utils/package'
-import marked from 'marked'
-import hljs from 'highlight.js'
+import { getProjectPkgJson } from '../../utils/package'
 import { shell } from 'electron'
 @Component
 export default class Setting extends Vue {
   info = null
-  readme = ''
+  dependencies = []
   loading = false
 
-  homepage = ''
-  htmlUrl = ''
-
-  dependencies = []
-
-  get dep () {
-    return this.$store.getters.getDep
+  get project () {
+    return this.$store.getters.getProject
   }
 
-  set dep (value) {
-    this.$store.commit('setDep', value)
+  set project (value) {
+    this.$store.commit('setProject', value)
   }
 
-  @Watch('dep', { deep: true })
+  @Watch('project', { deep: true })
   onChangeValue () {
-    this.getDepInfo()
+    this.getProjectInfo()
   }
 
-  async getDepInfo () {
+  async getProjectInfo () {
     this.loading = true
-    this.readme = ''
-    this.homepage = ''
-    this.htmlUrl = ''
-    const result = await searchPkg(this.dep.name)
-
-    if (result) {
-      this.info = result.data.results[0]
-      const arr = result.data.results[0].package.links.repository.split('/')
-      const name = arr[arr.length - 1]
-      this.getRepo(name)
-    } else {
-      this.loading = false
-    }
+    console.log(this.project)
+    getProjectPkgJson(this.project.path)
   }
 
-  async getRepo (name: string) {
-    const repo = await getRepository(name)
-    if (repo) {
-      this.homepage = repo.data.items[0].homepage
-      this.htmlUrl = repo.data.items[0].html_url
-      const fullname = repo.data.items[0].full_name
-      const branch = repo.data.items[0].default_branch
-      this.getMd(fullname, branch)
-    }
-  }
-
-  async getMd (fullname: string, branch: string) {
-    const mdArr = ['README.md', 'readme.md', 'README.MD', 'Readme.md', 'readme.MD', 'ReadMe.md', 'ReadMe.Md', 'ReadMe.MD', 'README.markdown', 'readme.markdown', 'README', 'readme']
-    for (const i of mdArr) {
-      const md = await getMarkdown(fullname, branch, i)
-      if (md) {
-        this.readme = marked(md.data, {
-          mangle: false,
-          highlight: (code, language) => {
-            const lan = hljs.getLanguage(language) ? language : 'plaintext'
-            return hljs.highlight(lan, code).value
-          }
-        })
-        this.loading = false
-        return false
-      }
-    }
-    this.loading = false
+  btnClickEvent () {
+    console.log('lala')
   }
 
   openUrl (url: string) {
