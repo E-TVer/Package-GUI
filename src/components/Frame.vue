@@ -1,7 +1,7 @@
 <template>
   <div class="frame">
     <div class="left">
-      <span class="side" @click="sideClickEvent()">
+      <span class="side" @click="checkUpdate()">
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
@@ -22,7 +22,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 
 @Component
 export default class Frame extends Vue {
@@ -51,6 +51,19 @@ export default class Frame extends Vue {
     if (e === 'close') {
       win.destroy()
     }
+  }
+
+  checkUpdate () {
+    ipcRenderer.send('update')
+    ipcRenderer.on('update-replay-check', (e, res) => {
+      console.log(res, 'update-replay-check')
+    })
+    ipcRenderer.on('update-replay-download', (e, res) => {
+      console.log(res, 'update-replay-download')
+    })
+    ipcRenderer.on('update-replay-downloaded', (e, res) => {
+      console.log(res, 'update-replay-downloaded')
+    })
   }
 }
 </script>

@@ -19,7 +19,8 @@
         </div>
         <div class="project" v-show="sidebar.type === 'project'">
           <hsc-menu-style-white>
-            <hsc-menu-context-menu style="display: block;" v-for="i in projects" :key="i.name">
+            <!-- <hsc-menu-context-menu style="display: block;" v-for="i in projects" :key="i.name"> -->
+            <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i.name">
               <div class="item" @click="projectItemClick(i.name, i.path)">
                 <i class="el-icon-folder"></i>
                 <span>{{i.name}}</span>

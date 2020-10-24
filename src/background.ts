@@ -1,7 +1,8 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import { autoUpdater } from 'electron-updater'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
@@ -60,6 +61,16 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
+})
+
+ipcMain.on('update', async () => {
+  const checkForUpdates = await autoUpdater.checkForUpdates()
+  if (win) win.webContents.send('update-replay-check', checkForUpdates)
+  const download = await autoUpdater.downloadUpdate()
+  if (win) win.webContents.send('update-replay-download', download)
+  autoUpdater.on('update-downloaded', () => {
+    if (win) win.webContents.send('update-replay-downloaded', 'downloaded')
+  })
 })
 
 // This method will be called when Electron has finished
