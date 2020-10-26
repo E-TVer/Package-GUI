@@ -18,7 +18,7 @@ protocol.registerSchemesAsPrivileged([
 
 function createWindow () {
   win = new BrowserWindow({
-    width: 1800,
+    width: 1080,
     height: 800,
     frame: false,
     webPreferences: {
@@ -63,6 +63,10 @@ ipcMain.on('update', async () => {
     if (win) win.webContents.send('update-replay-downloaded', 'downloaded')
     autoUpdater.quitAndInstall()
   })
+  // autoUpdater.downloadUpdate()
+  // autoUpdater.on('update-downloaded', () => {
+  //   if (win) win.webContents.send('update-replay-downloaded', 'downloaded')
+  // })
 })
 
 app.on('ready', async () => {

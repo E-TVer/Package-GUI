@@ -65,6 +65,12 @@ export default class Frame extends Vue {
       console.log(res, 'update-replay-downloaded')
     })
   }
+
+  mounted () {
+    ipcRenderer.on('update-replay-downloaded', (e, res) => {
+      console.log(res, 'frame ipc on downloaded')
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
