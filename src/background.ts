@@ -3,7 +3,6 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import { initUpdater } from './utils/update'
-import os from 'os'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
@@ -34,7 +33,7 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
-  if (os.platform() === 'win32') {
+  if (process.platform === 'win32') {
     initUpdater(win)
   }
 
