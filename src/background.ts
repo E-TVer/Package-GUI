@@ -1,14 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import { autoUpdater } from 'electron-updater'
+import { initUpdater } from './utils/update'
+import os from 'os'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
-
-autoUpdater.autoDownload = true
-autoUpdater.autoInstallOnAppQuit = false
 
 let win: BrowserWindow | null
 
@@ -36,6 +34,10 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
+  if (os.platform() === 'win32') {
+    initUpdater(win)
+  }
+
   win.on('closed', () => {
     win = null
   })
@@ -51,21 +53,6 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
-
-ipcMain.on('update', async () => {
-  const checkForUpdates = await autoUpdater.checkForUpdates()
-  if (win) win.webContents.send('update-replay-check', checkForUpdates)
-  const download = await autoUpdater.downloadUpdate()
-  if (win) win.webContents.send('update-replay-download', download)
-  autoUpdater.on('update-downloaded', () => {
-    if (win) win.webContents.send('update-replay-downloaded', 'downloaded')
-    autoUpdater.quitAndInstall()
-  })
-  // autoUpdater.downloadUpdate()
-  // autoUpdater.on('update-downloaded', () => {
-  //   if (win) win.webContents.send('update-replay-downloaded', 'downloaded')
-  // })
 })
 
 app.on('ready', async () => {
