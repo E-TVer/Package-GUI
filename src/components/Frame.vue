@@ -5,7 +5,7 @@
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
-      <span class="name">Package GUI v0.1.7</span>
+      <span class="name">Package GUI v0.1.8</span>
       <span class="name">状态: {{txt}}</span>
     </div>
     <div class="right">
