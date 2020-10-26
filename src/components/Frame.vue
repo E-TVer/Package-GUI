@@ -30,7 +30,7 @@ import { remote, ipcRenderer } from 'electron'
 export default class Frame extends Vue {
   sidebar = false
   txt = '无'
-  hasUpdate = true
+  hasUpdate = false
 
   get setting () {
     return this.$store.getters.getSetting
