@@ -21,8 +21,8 @@ export function initUpdater (win: BrowserWindow) {
   })
 
   // 检测到有可用的更新
-  autoUpdater.on('update-available', () => {
-    win.webContents.send('update-available')
+  autoUpdater.on('update-available', (info) => {
+    win.webContents.send('update-available', info)
   })
 
   // 没有检测到有可用的更新

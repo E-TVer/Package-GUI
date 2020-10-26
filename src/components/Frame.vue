@@ -5,7 +5,7 @@
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
-      <span class="name">Package GUI v0.1.10</span>
+      <span class="name">Package GUI v0.1.11</span>
       <span class="name">状态: {{txt}}</span>
       <span class="name" v-if="hasUpdate" @click="starUpdate()">开始更新</span>
     </div>
@@ -62,8 +62,12 @@ export default class Frame extends Vue {
     ipcRenderer.on('checking-for-update', () => {
       this.txt = 'checking-for-update'
     })
-    ipcRenderer.on('update-available', () => {
-      this.txt = 'update-available 检测到有可用更新'
+    ipcRenderer.on('update-available', (e, info) => {
+      console.log(info, 'update-available')
+      const version = info.UpdateInfo.version
+      const v = info.updateInfo.version
+      this.txt = 'update-available 检测到有可用更新: V' + version + 'v' + v
+
       this.hasUpdate = true
     })
     ipcRenderer.on('update-not-available', () => {
