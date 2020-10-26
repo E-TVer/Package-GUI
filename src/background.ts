@@ -34,7 +34,6 @@ function createWindow () {
   } else {
     createProtocol('app')
     win.loadURL('app://./index.html')
-    autoUpdater.checkForUpdatesAndNotify()
   }
 
   win.on('closed', () => {
