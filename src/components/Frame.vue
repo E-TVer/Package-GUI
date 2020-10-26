@@ -5,7 +5,7 @@
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
-      <span class="name">Package GUI v0.1.11</span>
+      <span class="name">Package GUI v0.1.12</span>
       <span class="name">状态: {{txt}}</span>
       <span class="name" v-if="hasUpdate" @click="starUpdate()">开始更新</span>
     </div>
@@ -30,7 +30,7 @@ import { remote, ipcRenderer } from 'electron'
 export default class Frame extends Vue {
   sidebar = false
   txt = '无'
-  hasUpdate = false
+  hasUpdate = true
 
   get setting () {
     return this.$store.getters.getSetting
@@ -86,6 +86,7 @@ export default class Frame extends Vue {
   }
 
   starUpdate () {
+    console.log('lala')
     ipcRenderer.send('quitAndInstall')
   }
 
@@ -125,6 +126,8 @@ export default class Frame extends Vue {
       display: flex;
       font-size: 12px;
       align-items: center;
+      -webkit-app-region: no-drag;
+      cursor: pointer;
     }
   }
   .right{
