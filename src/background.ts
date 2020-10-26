@@ -7,6 +7,9 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
+autoUpdater.autoDownload = true
+autoUpdater.autoInstallOnAppQuit = false
+
 let win: BrowserWindow | null
 
 protocol.registerSchemesAsPrivileged([
@@ -31,6 +34,7 @@ function createWindow () {
   } else {
     createProtocol('app')
     win.loadURL('app://./index.html')
+    autoUpdater.checkForUpdatesAndNotify()
   }
 
   win.on('closed', () => {
@@ -57,6 +61,7 @@ ipcMain.on('update', async () => {
   if (win) win.webContents.send('update-replay-download', download)
   autoUpdater.on('update-downloaded', () => {
     if (win) win.webContents.send('update-replay-downloaded', 'downloaded')
+    autoUpdater.quitAndInstall()
   })
 })
 
