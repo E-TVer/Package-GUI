@@ -31,8 +31,8 @@ export function initUpdater (win: BrowserWindow) {
   })
 
   // 更新出错
-  autoUpdater.on('update-error', () => {
-    win.webContents.send('update-error')
+  autoUpdater.on('update-error', err => {
+    win.webContents.send('update-error', err)
   })
 
   // 下载更新进度

@@ -5,8 +5,9 @@
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
-      <span class="name">Package GUI v0.1.8</span>
+      <span class="name">Package GUI v0.1.9</span>
       <span class="name">状态: {{txt}}</span>
+      <span class="name" v-if="hasUpdate" @click="starUpdate()">开始更新</span>
     </div>
     <div class="right">
       <span class="min" @click="frameClickEvent('min')">
@@ -29,6 +30,7 @@ import { remote, ipcRenderer } from 'electron'
 export default class Frame extends Vue {
   sidebar = false
   txt = '无'
+  hasUpdate = false
 
   get setting () {
     return this.$store.getters.getSetting
@@ -62,12 +64,13 @@ export default class Frame extends Vue {
     })
     ipcRenderer.on('update-available', () => {
       this.txt = 'update-available 检测到有可用更新'
+      this.hasUpdate = true
     })
     ipcRenderer.on('update-not-available', () => {
       this.txt = 'update-not-available 没有检测到有可用更新'
     })
-    ipcRenderer.on('update-error', () => {
-      this.txt = 'update-error 更新报错'
+    ipcRenderer.on('update-error', (e, err) => {
+      this.txt = 'update-error 更新报错' + err
     })
     ipcRenderer.on('download-progress', (e, progressObj) => {
       const number = progressObj.percent
@@ -76,6 +79,10 @@ export default class Frame extends Vue {
     ipcRenderer.on('update-downloaded', () => {
       this.txt = 'update-downloaded 下载完毕, 退出安装'
     })
+  }
+
+  starUpdate () {
+    ipcRenderer.send('quitAndInstall')
   }
 
   mounted () {
