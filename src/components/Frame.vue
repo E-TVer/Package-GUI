@@ -5,7 +5,7 @@
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
-      <span class="name">Package GUI v0.1.14</span>
+      <span class="name">Package GUI v0.1.15</span>
       <span class="name">状态: {{txt}}</span>
       <span class="name" v-if="hasUpdate" @click="starUpdate()">开始更新</span>
     </div>
