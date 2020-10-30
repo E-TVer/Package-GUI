@@ -4,6 +4,8 @@ import store from './store'
 import './plugins/element/index'
 import './plugins/cssgg/index'
 import './plugins/contextmenu/index'
+import './plugins/vxe-table/utils'
+import './plugins/vxe-table/table'
 import '@primer/css/markdown/index.scss'
 import './assets/scss/hljs-github.css'
 

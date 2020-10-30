@@ -1,17 +1,23 @@
 <template>
   <div class="projectDep">
     <div class="body pkg-scrollbar">
-      <el-table class="table" :data="dependencies">
-        <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column label="本地版本" prop="localVersion"></el-table-column>
-        <el-table-column label="线上版本" prop="onlineVersion"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="btnClickEvent(scope.row)">更新</el-button>
-            <el-button size="mini" type="danger" @click="btnClickEvent(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="table">
+        <vxe-table class="pkg-scrollbar" size="mini" border auto-resize sync-resize height="auto" :data="allDep">
+          <vxe-table-column field="name" title="依赖"></vxe-table-column>
+          <vxe-table-column field="version" title="本地版本"></vxe-table-column>
+          <vxe-table-column field="onlineVersion" title="最新版本"></vxe-table-column>
+          <vxe-table-column field="env" title="环境"></vxe-table-column>
+          <vxe-table-column title="操作">
+            <template v-slot="{row, rowIndex}">
+              <el-button size="mini" @click="deleteDepEvent(row, rowIndex)">删除</el-button>
+              <el-button size="mini" @click="updateDepEvent(row, rowIndex)" type="primary">更新</el-button>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
+      </div>
+      <div class="btns">
+        <el-button>lala</el-button>
+      </div>
     </div>
     <div class="footer">
       <div class="log">
@@ -26,11 +32,22 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { getProjectPkgJson } from '../../utils/package'
 import { shell } from 'electron'
+
+interface Dependencies {
+  name: string;
+  version: string;
+  env: string;
+}
+
 @Component
 export default class Setting extends Vue {
   info = null
-  dependencies = []
+  json = {}
+  dependencies: Dependencies[] = []
+  devDependencies: Dependencies[] = []
+  allDep: Dependencies[] = []
   loading = false
+  tableHeight = window.innerHeight - 40
 
   get project () {
     return this.$store.getters.getProject
@@ -40,6 +57,14 @@ export default class Setting extends Vue {
     this.$store.commit('setProject', value)
   }
 
+  get dep () {
+    return this.$store.getters.getDep
+  }
+
+  set dep (value) {
+    this.$store.commit('setDep', value)
+  }
+
   @Watch('project', { deep: true })
   onChangeValue () {
     this.getProjectInfo()
@@ -47,8 +72,38 @@ export default class Setting extends Vue {
 
   async getProjectInfo () {
     this.loading = true
-    console.log(this.project)
-    getProjectPkgJson(this.project.path)
+    const json = await getProjectPkgJson(this.project.path)
+    this.json = json
+    console.log(json)
+    const depArr = []
+    if (json.dependencies) {
+      for (const i in json.dependencies) {
+        const j = {
+          name: i,
+          version: json.dependencies[i],
+          env: ''
+        }
+        depArr.push(j)
+      }
+      this.dependencies = depArr
+    }
+    const devArr = []
+    if (json.devDependencies) {
+      for (const i in json.devDependencies) {
+        const j = {
+          name: i,
+          version: json.devDependencies[i],
+          env: 'dev'
+        }
+        devArr.push(j)
+      }
+      this.devDependencies = devArr
+    }
+    this.allDep = depArr.concat(devArr)
+  }
+
+  updateDepEvent (row: object, index: number) {
+    console.log(row, index, 'updateDepEvent')
   }
 
   btnClickEvent () {
@@ -59,9 +114,7 @@ export default class Setting extends Vue {
     shell.openExternal(url)
   }
 
-  mounted () {
-    // this.getDepInfo()
-  }
+  // mounted () {}
 }
 </script>
 <style lang="scss" scoped>
@@ -73,18 +126,13 @@ export default class Setting extends Vue {
   flex-direction: column;
   .body{
     flex: 1;
-    // padding-right: 10px;
-    // padding: 0 20px;
     position: relative;
-    overflow: hidden;
     border: 1px solid #00000000;
-    // &:hover{
-    //   overflow-y: auto;
-    //   padding: 0 14px 0 20px;
-    // }
-    .readme{
-      padding: 10px 0;
-      word-wrap:break-word;
+    .table{
+      height: calc(100% - 40px);
+    }
+    .btns{
+      height: 40px;
     }
   }
   .footer{

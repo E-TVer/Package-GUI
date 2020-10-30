@@ -2,12 +2,16 @@
   <div class="main">
     <Frame />
     <div class="body">
-      <Project-Dep />
+      <transition name="fade">
+        <Project-Dep v-if="dep.event==='view' && dep.type === 'project'"/>
+      </transition>
+      <transition name="fade">
+        <Setting v-if="setting.show" />
+      </transition>
+      <transition name="fade">
+        <Global-Dep v-if="dep.event === 'view' && dep.type === 'global'" />
+      </transition>
     </div>
-    <transition name="fade">
-      <Setting v-if="setting.show" />
-      <Global-Dep v-if="dep.event === 'view'" />
-    </transition>
   </div>
 </template>
 <script lang="ts">
@@ -37,11 +41,9 @@ export default class Main extends Vue {
 </script>
 <style lang="scss" scoped>
 .main{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  width: calc(100% - 240px);
   .body{
-    flex: 1;
+    height: calc(100% - 30px);
     width: 100%;
     background-color: #fff;
   }

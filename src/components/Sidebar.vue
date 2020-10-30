@@ -19,8 +19,7 @@
         </div>
         <div class="project" v-show="sidebar.type === 'project'">
           <hsc-menu-style-white>
-            <!-- <hsc-menu-context-menu style="display: block;" v-for="i in projects" :key="i.name"> -->
-            <hsc-menu-context-menu style="display: block;" v-for="i in 50" :key="i.name">
+            <hsc-menu-context-menu style="display: block;" v-for="i in projects" :key="i.name">
               <div class="item" @click="projectItemClick(i.name, i.path)">
                 <i class="el-icon-folder"></i>
                 <span>{{i.name}}</span>
@@ -121,6 +120,8 @@ export default class Sidebar extends Vue {
   projectItemClick (name: string, path: string) {
     this.project.name = name
     this.project.path = path
+    this.dep.type = 'project'
+    this.dep.event = 'view'
   }
 
   deleteItem (e: string) {
@@ -172,6 +173,7 @@ export default class Sidebar extends Vue {
 <style lang="scss" scoped>
 .sidebar{
   width: 240px;
+  min-width: 240px;
   height: 100%;
   background-color: #fafafa;
   display: flex;

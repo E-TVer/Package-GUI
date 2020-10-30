@@ -56,5 +56,5 @@ export async function getProject (): Promise<ProjectValue> {
 export async function getProjectPkgJson (projectPath: string) {
   const file = path.join(projectPath, 'package.json')
   const json = parseJSON(fs.readFileSync(file, { encoding: 'utf8' }))
-  console.log(json)
+  return json
 }

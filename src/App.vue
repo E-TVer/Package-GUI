@@ -37,6 +37,7 @@ html, body, #app{
 }
 #app{
   display: flex;
+  overflow: hidden;
   justify-content: flex-start;
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif;
   -webkit-font-smoothing: antialiased;
