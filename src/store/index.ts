@@ -8,6 +8,7 @@ export interface InSidebar {
   type: string;
 }
 export interface InProject {
+  event?: string;
   name?: string;
   path?: string;
 }
@@ -36,6 +37,7 @@ const initState: VuexState = {
     type: 'project'
   },
   project: {
+    event: '',
     name: '',
     path: ''
   },

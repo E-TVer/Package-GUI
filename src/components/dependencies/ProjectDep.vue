@@ -2,11 +2,11 @@
   <div class="projectDep">
     <div class="body pkg-scrollbar">
       <div class="table">
-        <vxe-table class="pkg-scrollbar" size="mini" border auto-resize sync-resize height="auto" :data="allDep">
+        <vxe-table highlight-hover-row size="mini" :loading="loading" border auto-resize sync-resize height="auto" :data="allDep">
           <vxe-table-column field="name" title="依赖"></vxe-table-column>
           <vxe-table-column field="version" title="本地版本"></vxe-table-column>
           <vxe-table-column field="onlineVersion" title="最新版本"></vxe-table-column>
-          <vxe-table-column field="env" title="环境"></vxe-table-column>
+          <vxe-table-column field="env" title="环境" sort-by="env" sortable></vxe-table-column>
           <vxe-table-column title="操作">
             <template v-slot="{row, rowIndex}">
               <el-button size="mini" @click="deleteDepEvent(row, rowIndex)">删除</el-button>
@@ -74,7 +74,6 @@ export default class Setting extends Vue {
     this.loading = true
     const json = await getProjectPkgJson(this.project.path)
     this.json = json
-    console.log(json)
     const depArr = []
     if (json.dependencies) {
       for (const i in json.dependencies) {
@@ -100,6 +99,7 @@ export default class Setting extends Vue {
       this.devDependencies = devArr
     }
     this.allDep = depArr.concat(devArr)
+    this.loading = false
   }
 
   updateDepEvent (row: object, index: number) {

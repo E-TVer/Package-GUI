@@ -3,7 +3,7 @@
     <Frame />
     <div class="body">
       <transition name="fade">
-        <Project-Dep v-if="dep.event==='view' && dep.type === 'project'"/>
+        <Project-Dep v-show="dep.event==='view' && dep.type === 'project'"/>
       </transition>
       <transition name="fade">
         <Setting v-if="setting.show" />

@@ -18,14 +18,14 @@
           </hsc-menu-style-white>
         </div>
         <div class="project" v-show="sidebar.type === 'project'">
-          <hsc-menu-style-white>
+          <hsc-menu-style-white style="z-index: 2;">
             <hsc-menu-context-menu style="display: block;" v-for="i in projects" :key="i.name">
               <div class="item" @click="projectItemClick(i.name, i.path)">
                 <i class="el-icon-folder"></i>
                 <span>{{i.name}}</span>
               </div>
               <template slot="contextmenu">
-                <hsc-menu-item label="删除" @click="deleteItem(i + '')" :sync="true" />
+                <hsc-menu-item label="从列表中删除" @click="deleteItem(i)" :sync="true" />
                 <hsc-menu-item label="打开项目目录" @click="showInFolder(i.path)" :sync="true" />
               </template>
             </hsc-menu-context-menu>
@@ -66,7 +66,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { shell } from 'electron'
 import { getGlobalDepSimple } from '../plugins/spawn/global/globalDep'
 import { getProject } from '../utils/package'
-interface ProjectValue {
+interface Projects {
   name: string;
   path: string;
 }
@@ -75,7 +75,7 @@ export default class Sidebar extends Vue {
   loading = false
   globalSort = true
   globalDep: Array<object> = []
-  projects: Array<ProjectValue> = []
+  projects: Array<Projects> = []
 
   get sidebar () {
     return this.$store.getters.getSidebar
@@ -124,8 +124,9 @@ export default class Sidebar extends Vue {
     this.dep.event = 'view'
   }
 
-  deleteItem (e: string) {
-    console.log(e)
+  deleteItem (e: Projects) {
+    const index = this.projects.indexOf(e)
+    this.projects.splice(index, 1)
   }
 
   async refreshBtnClick () {
@@ -160,6 +161,11 @@ export default class Sidebar extends Vue {
         }
       }
       this.projects.push(project)
+      this.dep.event = 'view'
+      this.dep.type = 'project'
+      // this.project = project
+      this.project.name = project.name
+      this.project.path = project.path
     } else {
       this.$message.warning('不是项目目录, 无法添加')
     }
