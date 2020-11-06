@@ -13,6 +13,11 @@ export function initUpdater () {
     autoUpdater.on('update-available', info => {
       event.sender.send('update-available', info)
     })
+
+    // 下载更新进度
+    autoUpdater.on('download-progress', progress => {
+      event.sender.send('download-progress', progress.percent)
+    })
   })
 
   // 主进程监听下载安装事件
