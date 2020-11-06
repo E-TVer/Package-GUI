@@ -1,6 +1,6 @@
 <template>
   <div class="setting">
-    <div>版本: v0.1.24</div>
+    <div>版本: v0.1.25</div>
     <div><el-button @click="checkUpdate()">检查更新</el-button></div>
     <div>版本: v {{version}}</div>
     <div>更新内容: </div>
@@ -8,7 +8,7 @@
     <div><el-button @click="startDownload()">开始下载更新</el-button></div>
     <div>更新进度: {{percent}}</div>
     <div v-show="done"><el-button @click="quitAndInstall()">退出安装</el-button></div>
-    <div class="img">
+    <!-- <div class="img">
       <img src="../assets/img/01.png" alt="">
       <img src="../assets/img/02.png" alt="">
       <img src="../assets/img/03.png" alt="">
@@ -16,7 +16,7 @@
       <img src="../assets/img/05.png" alt="">
       <img src="../assets/img/06.png" alt="">
       <img src="../assets/img/07.png" alt="">
-    </div>
+    </div> -->
   </div>
 </template>
 <script lang="ts">
@@ -27,7 +27,7 @@ import { searchPkg } from '../utils/package'
 export default class Setting extends Vue {
   version = ''
   html = ''
-  percent = 0
+  percent = null
   done = false
 
   getInfo () {
@@ -49,7 +49,7 @@ export default class Setting extends Vue {
     ipcRenderer.send('downloadUpdate')
     ipcRenderer.on('download-progress', (e, info) => {
       console.log(info, 'download-progress info')
-      this.percent = info.percent
+      this.percent = info
     })
     ipcRenderer.on('update-downloaded', () => {
       console.log('update-downloaded')
