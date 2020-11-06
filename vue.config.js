@@ -17,24 +17,24 @@ module.exports = {
             repo: 'Package-GUI'
           }
         ],
-        mac: {
-          icon: 'build/icon/icon.icns',
-          category: 'public.app-category.developer-tools',
-          target: 'default',
-          extendInfo: {
-            LSUIElement: 1
-          }
-        },
+        // mac: {
+        //   icon: 'build/icon/icon.icns',
+        //   category: 'public.app-category.developer-tools',
+        //   target: 'default',
+        //   extendInfo: {
+        //     LSUIElement: 1
+        //   }
+        // },
         win: {
           icon: 'build/icons/icon.ico',
           target: 'nsis'
-        },
-        linux: {
-          icon: 'build/icons/'
-        },
-        snap: {
-          publish: ['github']
         }
+        // linux: {
+        //   icon: 'build/icons/'
+        // },
+        // snap: {
+        //   publish: ['github']
+        // }
       }
     }
   }

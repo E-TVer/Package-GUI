@@ -1,6 +1,6 @@
 <template>
   <div class="setting">
-    <div>版本: v0.1.19</div>
+    <div>版本: v0.1.20</div>
     <div>版本: v {{version}}</div>
     <!-- <div><el-button @click="getInfo()">获取更新内容</el-button></div> -->
     <div>更新内容: <span v-html="html"></span></div>
