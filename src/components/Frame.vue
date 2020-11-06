@@ -77,6 +77,11 @@ export default class Frame extends Vue {
     ipcRenderer.on('update-error', (e, err) => {
       this.txt = 'update-error 更新报错' + err
     })
+  }
+
+  starUpdate () {
+    console.log('lala')
+    ipcRenderer.send('quitAndInstall')
     ipcRenderer.on('download-progress', (e, progressObj) => {
       const number = progressObj.percent
       this.txt = 'download-progress 更新进度: ' + number
@@ -84,11 +89,6 @@ export default class Frame extends Vue {
     ipcRenderer.on('update-downloaded', () => {
       this.txt = 'update-downloaded 下载完毕, 退出安装'
     })
-  }
-
-  starUpdate () {
-    console.log('lala')
-    ipcRenderer.send('quitAndInstall')
   }
 
   mounted () {
