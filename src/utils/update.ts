@@ -26,7 +26,7 @@ export function initUpdater (win: BrowserWindow) {
   })
 
   // 检测到有可用的更新
-  autoUpdater.on('update-available', (info) => {
+  autoUpdater.on('update-available', info => {
     win.webContents.send('update-available', info)
   })
 
@@ -41,8 +41,8 @@ export function initUpdater (win: BrowserWindow) {
   })
 
   // 下载更新进度
-  autoUpdater.on('download-progress', (progressObj) => {
-    win.webContents.send('download-progress', progressObj);
+  autoUpdater.on('download-progress', progress => {
+    win.webContents.send('download-progress', progress);
   })
 
   // 下载完成并退出安装

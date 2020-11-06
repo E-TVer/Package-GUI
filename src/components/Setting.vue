@@ -1,6 +1,7 @@
 <template>
   <div class="setting">
     <div>版本: v0.1.20</div>
+    <div><el-button @click="checkUpdate()">检查更新</el-button></div>
     <div>版本: v {{version}}</div>
     <!-- <div><el-button @click="getInfo()">获取更新内容</el-button></div> -->
     <div>更新内容: <span v-html="html"></span></div>
@@ -32,6 +33,12 @@ export default class Setting extends Vue {
       console.log(info, 'update-available info')
       this.version = info.version
     })
+    ipcRenderer.on('update-not-available', (e, info) => {
+      console.log(info, 'update-not-available info')
+    })
+    ipcRenderer.on('update-error', (e, info) => {
+      console.log(info, 'update-error info')
+    })
   }
 
   startDownload () {
@@ -51,7 +58,7 @@ export default class Setting extends Vue {
   }
 
   mounted () {
-    this.checkUpdate()
+    // this.checkUpdate()
   }
 }
 </script>
