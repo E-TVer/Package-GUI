@@ -34,7 +34,7 @@ function createWindow () {
   }
 
   if (process.platform === 'win32') {
-    initUpdater(win)
+    initUpdater()
   }
 
   win.on('closed', () => {
