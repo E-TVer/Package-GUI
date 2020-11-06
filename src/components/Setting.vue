@@ -1,6 +1,6 @@
 <template>
   <div class="setting">
-    <div>版本: v0.1.21</div>
+    <div>版本: v0.1.22</div>
     <div><el-button @click="checkUpdate()">检查更新</el-button></div>
     <div>版本: v {{version}}</div>
     <div>更新内容: </div>
@@ -33,12 +33,6 @@ export default class Setting extends Vue {
       console.log(info, 'update-available info')
       this.version = info.version
       this.html = info.releaseNotes
-    })
-    ipcRenderer.on('update-not-available', (e, info) => {
-      console.log(info, 'update-not-available info')
-    })
-    ipcRenderer.on('update-error', (e, info) => {
-      console.log(info, 'update-error info')
     })
   }
 
