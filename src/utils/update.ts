@@ -10,9 +10,14 @@ export function initUpdater (win: BrowserWindow) {
     autoUpdater.checkForUpdates()
   })
 
+  // 主进程监听下载安装事件
+  ipcMain.on('downloadUpdate', () => {
+    autoUpdater.downloadUpdate()
+  })
+
   // 主进程监听退出并安装事件
   ipcMain.on('quitAndInstall', () => {
-    autoUpdater.downloadUpdate()
+    autoUpdater.quitAndInstall();
   })
 
   // 开始检测是否有更新
@@ -43,6 +48,5 @@ export function initUpdater (win: BrowserWindow) {
   // 下载完成并退出安装
   autoUpdater.on('update-downloaded', () => {
     win.webContents.send('update-downloaded');
-    autoUpdater.quitAndInstall();
   })
 }

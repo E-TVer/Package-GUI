@@ -80,20 +80,13 @@ export default class Frame extends Vue {
   }
 
   starUpdate () {
-    console.log('lala')
     ipcRenderer.send('quitAndInstall')
     ipcRenderer.on('download-progress', (e, progressObj) => {
       const number = progressObj.percent
       this.txt = 'download-progress 更新进度: ' + number
     })
     ipcRenderer.on('update-downloaded', () => {
-      this.txt = 'update-downloaded 下载完毕, 退出安装'
-    })
-  }
-
-  mounted () {
-    ipcRenderer.on('update-replay-downloaded', (e, res) => {
-      console.log(res, 'frame ipc on downloaded')
+      this.txt = 'update-downloaded 下载完毕'
     })
   }
 }

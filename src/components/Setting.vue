@@ -1,6 +1,12 @@
 <template>
   <div class="setting">
-    <el-button @click="checkUpdate()">检查更新</el-button>
+    <div>版本: v0.1.19</div>
+    <div>版本: v {{version}}</div>
+    <!-- <div><el-button @click="getInfo()">获取更新内容</el-button></div> -->
+    <div>更新内容: <span v-html="html"></span></div>
+    <div><el-button @click="startDownload()">开始下载更新</el-button></div>
+    <div>更新进度: {{percent}}</div>
+    <div v-show="done"><el-button @click="quitAndInstall()">退出安装</el-button></div>
   </div>
 </template>
 <script lang="ts">
@@ -9,6 +15,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import { searchPkg } from '../utils/package'
 @Component
 export default class Setting extends Vue {
+  version = ''
+  html = ''
+  percent = 0
+  done = false
+
   getInfo () {
     searchPkg('vue').then(res => {
       console.log(res)
@@ -16,16 +27,31 @@ export default class Setting extends Vue {
   }
 
   checkUpdate () {
-    ipcRenderer.send('update')
-    ipcRenderer.on('update-replay-check', (e, res) => {
-      console.log(res, 'update-replay-check')
+    ipcRenderer.send('checkForUpdate')
+    ipcRenderer.on('update-available', (e, info) => {
+      console.log(info, 'update-available info')
+      this.version = info.version
     })
-    ipcRenderer.on('update-replay-download', (e, res) => {
-      console.log(res, 'update-replay-download')
+  }
+
+  startDownload () {
+    ipcRenderer.send('downloadUpdate')
+    ipcRenderer.on('download-progress', (e, info) => {
+      console.log(info, 'download-progress info')
+      this.percent = info.percent
     })
-    ipcRenderer.on('update-replay-downloaded', (e, res) => {
-      console.log(res, 'update-replay-downloaded')
+    ipcRenderer.on('update-downloaded', () => {
+      console.log('update-downloaded')
+      this.done = true
     })
+  }
+
+  quitAndInstall () {
+    ipcRenderer.send('quitAndInstall')
+  }
+
+  mounted () {
+    this.checkUpdate()
   }
 }
 </script>

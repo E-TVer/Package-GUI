@@ -2,6 +2,7 @@
   <div id="app">
     <Sidebar />
     <Main />
+    <Setting />
     <AddDep :depType="'project'" v-if="dep.event === 'add'" />
   </div>
 </template>
@@ -10,12 +11,14 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Main from './components/Main.vue'
 import Sidebar from './components/Sidebar.vue'
+import Setting from './components/Setting.vue'
 import AddDep from './components/dependencies/AddDep.vue'
 
 @Component({
   components: {
     Main,
     Sidebar,
+    Setting,
     AddDep
   }
 })
