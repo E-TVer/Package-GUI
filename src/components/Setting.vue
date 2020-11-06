@@ -1,10 +1,10 @@
 <template>
   <div class="setting">
-    <div>版本: v0.1.20</div>
+    <div>版本: v0.1.21</div>
     <div><el-button @click="checkUpdate()">检查更新</el-button></div>
     <div>版本: v {{version}}</div>
-    <!-- <div><el-button @click="getInfo()">获取更新内容</el-button></div> -->
-    <div>更新内容: <span v-html="html"></span></div>
+    <div>更新内容: </div>
+    <div v-html="html"></div>
     <div><el-button @click="startDownload()">开始下载更新</el-button></div>
     <div>更新进度: {{percent}}</div>
     <div v-show="done"><el-button @click="quitAndInstall()">退出安装</el-button></div>
@@ -32,6 +32,7 @@ export default class Setting extends Vue {
     ipcRenderer.on('update-available', (e, info) => {
       console.log(info, 'update-available info')
       this.version = info.version
+      this.html = info.releaseNotes
     })
     ipcRenderer.on('update-not-available', (e, info) => {
       console.log(info, 'update-not-available info')
