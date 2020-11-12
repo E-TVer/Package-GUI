@@ -2,7 +2,6 @@
   <div id="app">
     <Sidebar />
     <Main />
-    <Setting />
     <AddDep :depType="'project'" v-if="dep.event === 'add'" />
   </div>
 </template>

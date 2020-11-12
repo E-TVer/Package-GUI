@@ -1,7 +1,7 @@
 <template>
   <div class="frame">
     <div class="left">
-      <span class="side" @click="checkUpdate()">
+      <span class="side" @click="openSettingView()">
         <i class="gg-menu-left-alt" v-show="sidebar"></i>
         <i class="gg-menu-right-alt" v-show="!sidebar"></i>
       </span>
@@ -24,7 +24,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { remote, ipcRenderer } from 'electron'
+import { remote } from 'electron'
 
 @Component
 export default class Frame extends Vue {
@@ -40,8 +40,10 @@ export default class Frame extends Vue {
     this.$store.commit('setSetting', value)
   }
 
-  sideClickEvent () {
+  openSettingView () {
     this.sidebar = !this.sidebar
+    console.log(this.sidebar, 'sidebar')
+    this.setting.show = this.sidebar
   }
 
   frameClickEvent (e: string) {
@@ -55,39 +57,6 @@ export default class Frame extends Vue {
     if (e === 'close') {
       win.destroy()
     }
-  }
-
-  checkUpdate () {
-    ipcRenderer.send('checkForUpdate')
-    ipcRenderer.on('checking-for-update', () => {
-      this.txt = 'checking-for-update'
-    })
-    ipcRenderer.on('update-available', (e, info) => {
-      const v = info.version
-      this.txt = 'update-available 检测到有可用更新: V' + v
-      this.hasUpdate = true
-      const releaseNotes = info.releaseNotes
-      this.$alert(releaseNotes, {
-        dangerouslyUseHTMLString: true
-      })
-    })
-    ipcRenderer.on('update-not-available', () => {
-      this.txt = 'update-not-available 没有检测到有可用更新'
-    })
-    ipcRenderer.on('update-error', (e, err) => {
-      this.txt = 'update-error 更新报错' + err
-    })
-  }
-
-  starUpdate () {
-    ipcRenderer.send('quitAndInstall')
-    ipcRenderer.on('download-progress', (e, progressObj) => {
-      const number = progressObj.percent
-      this.txt = 'download-progress 更新进度: ' + number
-    })
-    ipcRenderer.on('update-downloaded', () => {
-      this.txt = 'update-downloaded 下载完毕'
-    })
   }
 }
 </script>

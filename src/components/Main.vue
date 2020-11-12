@@ -6,7 +6,7 @@
         <Project-Dep v-show="dep.event==='view' && dep.type === 'project'"/>
       </transition>
       <transition name="fade">
-        <Setting v-if="setting.show" />
+        <Setting v-show="setting.show" />
       </transition>
       <transition name="fade">
         <Global-Dep v-if="dep.event === 'view' && dep.type === 'global'" />

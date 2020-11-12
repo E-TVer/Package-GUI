@@ -22,7 +22,6 @@ export interface InDep {
 
 export interface InSetting {
   show?: boolean;
-  type?: string;
 }
 export interface VuexState {
   sidebar?: InSidebar;
@@ -48,8 +47,7 @@ const initState: VuexState = {
     version: ''
   },
   setting: {
-    show: false,
-    type: 'global'
+    show: false
   }
 }
 
